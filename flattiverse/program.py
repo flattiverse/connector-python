@@ -12,14 +12,15 @@ from flattiverse.connector.server import Server
 async def main():
     print("Starting...")
     server = Server()
-    login_status = await server.login("Player2", "Password")
+    # login_status = await server.login("Player2", "Password")
+    login_status = await server.login("Cliff McLane", "2..DLnZ6r")
 
     if login_status != 0:
         print("Login status", login_status)
     else:
         colorama.init()
         for universe in server.universes:
-            print("{:<15.15} | {:<30.30} | {:<10.10} | {:<10.10}"
+            print("{:<20.20} | {:<30.30} | {:<10.10} | {:<10.10}"
                   .format(universe.name, universe.description, universe.difficulty.name, universe.mode.name))
 
             for team in universe.teams:

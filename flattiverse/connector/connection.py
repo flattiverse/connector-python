@@ -132,7 +132,7 @@ class Connection:
             plain_chunk = bytearray(self.recv_aes.decrypt(self.buffer[0:number_of_decryptable_bytes]))
             self.plain += plain_chunk
 
-            reader = BinaryMemoryReader(self.plain, 0)
+            reader = BinaryMemoryReader(self.plain, 0, len(self.plain))
             packets = []
             packet = Packet()
 

@@ -13,5 +13,6 @@ class Privileges(Enum):
     Nothing = 0
     Join = 1
     Manage_Units = 2
-    Manage_Maps = 4
-    Manage_Universe = 8
+    Manage_Regions = 4
+    Manage_SYSTEMS = 8
+    Manage_Universe = 16

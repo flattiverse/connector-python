@@ -5,14 +5,20 @@ import struct
 
 
 class BinaryMemoryReader:
-    def __init__(self, buffer, position):
+    def __init__(self, buffer, position, size):
         self.buffer = buffer
         self.position = position
-        self.size = len(buffer) - position
+        self.size = size
 
     def require(self, byte_count):
         if byte_count > len(self.buffer):
             raise MemoryError("Not enough space for read operation")
+
+    def read_boolean(self):
+        self.require(1)
+        self.position += 1
+        self.size -= 1
+        return self.buffer[self.position - 1] != 0
 
     def read_byte(self):
         self.require(1)
@@ -55,6 +61,22 @@ class BinaryMemoryReader:
 
         return result
 
+    def read_string_non_null(self):
+        if self.size < 0:
+            return ""
+
+        length, bytes_consumed = self.read_string_length()
+
+        if self.size < length + bytes_consumed:
+            return ""
+
+        result = str(self.buffer[self.position + bytes_consumed:self.position + bytes_consumed + length], 'utf-8')
+
+        self.size -= bytes_consumed + length
+        self.position += bytes_consumed + length
+
+        return result
+
     def read_string_length(self):
         length = 0
         byte_pos = 0
@@ -73,7 +95,7 @@ class BinaryMemoryReader:
         current_pos = self.position
         self.position += payload_length
         self.size -= payload_length
-        return BinaryMemoryReader(self.buffer, current_pos)
+        return BinaryMemoryReader(self.buffer, current_pos, payload_length)
 
     def dump(self):
         column = 0;
